@@ -28,19 +28,16 @@ LEADERBOARD_URL = "https://adventofcode.com/{}/leaderboard/private/view/{}".form
 
 def formatCongratsMessage(members_json, timestamp):
     message = ""
-#    print("formatCongrats")
     for member in members_json.values():
         memberMessage = ":star: Congratulations " + member["name"] + " for completing: "
         completed = False
         for day, stars in member["completion_day_level"].items():
             for starNr, star in stars.items():
-#                print( member["name"] + " "+ str(day) + " " +  str(star["get_star_ts"] )+">"+str(timestamp))
                 if star["get_star_ts"] > timestamp:
                     if completed:
                         memberMessage += ", "
                     memberMessage += "day " + str(day) + " star " + str(starNr)
                     completed = True
-#                    print(memberMessage)
         if completed:
             message += memberMessage +" :star:\n"
     return message
