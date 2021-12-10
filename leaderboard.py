@@ -26,6 +26,25 @@ LEADERBOARD_URL = "https://adventofcode.com/{}/leaderboard/private/view/{}".form
         datetime.datetime.today().year,
         LEADERBOARD_ID)
 
+def formatCongratsMessage(members_json, timestamp):
+    message = ""
+#    print("formatCongrats")
+    for member in members_json.values():
+        memberMessage = ":star: Congratulations " + member["name"] + " on completing: "
+        completed = False
+        for day, stars in member["completion_day_level"].items():
+            for starNr, star in stars.items():
+#                print( member["name"] + " "+ str(day) + " " +  str(star["get_star_ts"] )+">"+str(timestamp))
+                if star["get_star_ts"] > timestamp:
+                    if completed:
+                        memberMessage += ", "
+                    memberMessage += "day " + str(day) + " star " + str(starNr)
+                    completed = True
+#                    print(memberMessage)
+        if completed:
+            message += memberMessage +"\n"
+    return message
+
 def formatLeaderMessage(members):
     """
     Format the message to conform to Slack's API
@@ -34,7 +53,7 @@ def formatLeaderMessage(members):
 
     # add each member to message
     medals = [':third_place_medal:', ':second_place_medal:', ':trophy:']
-    for username, score, stars in members:
+    for username, score, stars, last in members:
         if medals:
             medal = ' ' + medals.pop()
         else:
@@ -52,13 +71,15 @@ def parseMembers(members_json):
     # get member name, score and stars
     members = [(m["name"],
                 m["local_score"],
-                m["stars"]
+                m["stars"],
+                m["last_star_ts"]
                 ) for m in members_json.values()]
-
+    
     # sort members by score, descending
     members.sort(key=lambda s: (-s[1], -s[2]))
 
     return members
+
 
 def postMessage(message):
     """
@@ -97,12 +118,29 @@ def main():
 
     # get members from json
     members = parseMembers(r.json()["members"])
+      
+    last_star = 0
+    
+    for username, score, stars, last in members:
+        if last > last_star:
+            last_star = last
+
+    f  = open('previous', 'r')
+    previous = f.read()
+    f.close()
+    if previous == str(last_star):
+        sys.exit(1)
+    f = open ('previous','w')
+    f.write(str(last_star))
+    f.close()
+    
+    starMessage = formatCongratsMessage(r.json()["members"], int(previous))
 
     # generate message to send to slack
     message = formatLeaderMessage(members)
 
     # send message to slack
-    postMessage(message)
+    postMessage(starMessage + "\n" + message)
 
 if __name__ == "__main__":
     main()
