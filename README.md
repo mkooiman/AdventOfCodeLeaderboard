@@ -1,3 +1,11 @@
+forked from 
+https://github.com/tomswartz07/AdventOfCodeLeaderboard
+
+#Whats different in this fork
+
+This version checks for modifications of the list compared to the previous time it ran, it also gives a personalized congratulations message upon finishing any star. This is achieved by storing the last modification timestamp in a file called 'previous' 
+
+
 [![Pylint](https://github.com/tomswartz07/AdventOfCodeLeaderboard/actions/workflows/pylint.yml/badge.svg)](https://github.com/tomswartz07/AdventOfCodeLeaderboard/actions/workflows/pylint.yml)
 
 # Advent of Code Leaderboard Slack Bot
