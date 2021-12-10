@@ -42,7 +42,7 @@ def formatCongratsMessage(members_json, timestamp):
                     completed = True
 #                    print(memberMessage)
         if completed:
-            message += memberMessage +":star:\n"
+            message += memberMessage +" :star:\n"
     return message
 
 def formatLeaderMessage(members):
