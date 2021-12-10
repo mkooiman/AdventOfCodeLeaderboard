@@ -30,7 +30,7 @@ def formatCongratsMessage(members_json, timestamp):
     message = ""
 #    print("formatCongrats")
     for member in members_json.values():
-        memberMessage = ":star: Congratulations " + member["name"] + " on completing: "
+        memberMessage = ":star: Congratulations " + member["name"] + " for completing: "
         completed = False
         for day, stars in member["completion_day_level"].items():
             for starNr, star in stars.items():
@@ -42,7 +42,7 @@ def formatCongratsMessage(members_json, timestamp):
                     completed = True
 #                    print(memberMessage)
         if completed:
-            message += memberMessage +"\n"
+            message += memberMessage +":star:\n"
     return message
 
 def formatLeaderMessage(members):
